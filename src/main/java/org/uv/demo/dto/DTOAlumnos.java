@@ -8,10 +8,12 @@ package org.uv.demo.dto;
  *
  * @author yacruz
  */
-public class DTOAlumno {
-    private String nombre;
-    private String direccion;
+public class DTOAlumnos {
     private String telefono;
+    private String direccion;
+    private String nombre;
+    
+    
 
     public String getNombre() {
         return nombre;
@@ -19,6 +21,14 @@ public class DTOAlumno {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+    
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getDireccion() {
@@ -29,13 +39,7 @@ public class DTOAlumno {
         this.direccion = direccion;
     }
 
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+    
     
     
 }

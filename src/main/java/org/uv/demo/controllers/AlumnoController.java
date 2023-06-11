@@ -7,7 +7,7 @@ package org.uv.demo.controllers;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-import org.uv.demo.dto.DTOAlumno;
+import org.uv.demo.dto.DTOAlumnos;
 import org.uv.demo.repository.AlumnoRepository;
 import org.uv.demo.models.Alumno;
 
@@ -36,14 +36,14 @@ public class AlumnoController {
     }
 
     @PostMapping
-    public Alumno crearAlumno(@RequestBody DTOAlumno alumnoDTO) {
+    public Alumno crearAlumno(@RequestBody DTOAlumnos alumnoDTO) {
         Alumno alumno = new Alumno();
         BeanUtils.copyProperties(alumnoDTO, alumno);
         return alumnoRepository.save(alumno);
     }
 
     @PutMapping("/{id}")
-    public Alumno actualizarAlumno(@PathVariable Long id, @RequestBody DTOAlumno alumnoDTO) {
+    public Alumno actualizarAlumno(@PathVariable Long id, @RequestBody DTOAlumnos alumnoDTO) {
         Alumno alumnoExistente = alumnoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado con ID: " + id));
         BeanUtils.copyProperties(alumnoDTO, alumnoExistente);

@@ -17,8 +17,8 @@ public class Alumno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long claveAlumnos;
 
-    private String nombre;
     private String direccion;
+    private String nombre;
     private String telefono;
 
     public Long getClaveAlumnos() {
