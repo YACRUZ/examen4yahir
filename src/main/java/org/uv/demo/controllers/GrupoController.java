@@ -21,10 +21,10 @@ import org.uv.demo.models.*;
 public class GrupoController {
 
     private final GrupoRepository grupoRepository;
-    
+
     @Autowired
     private AlumnoRepository alumnoRepository;
-    
+
     @Autowired
     private MateriaRepository materiaRepository;
 
@@ -65,7 +65,16 @@ public class GrupoController {
     public Grupo actualizarGrupo(@PathVariable Long id, @RequestBody DTOGrupos grupoDTO) {
         Grupo grupoExistente = grupoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Grupo no encontrado con ID: " + id));
-        BeanUtils.copyProperties(grupoDTO, grupoExistente);
+
+        Materia materia = materiaRepository.findById(grupoDTO.getClaveMateria())
+                .orElseThrow(() -> new RuntimeException("Materia no encontrada con ID: " + grupoDTO.getClaveMateria()));
+        Alumno alumno = alumnoRepository.findById(grupoDTO.getClaveAlumno())
+                .orElseThrow(() -> new RuntimeException("Alumno no encontrado con ID: " + grupoDTO.getClaveAlumno()));
+
+        grupoExistente.setMateria(materia);
+        grupoExistente.setAlumno(alumno);
+        grupoExistente.setNombreGrupo(grupoDTO.getNombreGrupo());
+
         return grupoRepository.save(grupoExistente);
     }
 
