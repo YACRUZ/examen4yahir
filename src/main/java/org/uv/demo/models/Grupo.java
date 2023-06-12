@@ -19,10 +19,10 @@ public class Grupo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @ManyToMany
     private List<Materia> materias = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private List<Alumno> alumnos = new ArrayList<>();
 
     private String nombreGrupo;
