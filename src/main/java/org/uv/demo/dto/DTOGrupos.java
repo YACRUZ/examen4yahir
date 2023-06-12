@@ -4,29 +4,31 @@
  */
 package org.uv.demo.dto;
 
+import java.util.List;
+
 /**
  *
  * @author yacruz
  */
 public class DTOGrupos {
-    private Long claveMateria;
-    private Long claveAlumno;
+    private List<Long> clavesMateria;
+    private List<Long> clavesAlumno;
     private String nombreGrupo;
 
-    public Long getClaveMateria() {
-        return claveMateria;
+    public List<Long> getClavesMateria() {
+        return clavesMateria;
     }
 
-    public void setClaveMateria(Long claveMateria) {
-        this.claveMateria = claveMateria;
+    public void setClavesMateria(List<Long> clavesMateria) {
+        this.clavesMateria = clavesMateria;
     }
 
-    public Long getClaveAlumno() {
-        return claveAlumno;
+    public List<Long> getClavesAlumno() {
+        return clavesAlumno;
     }
 
-    public void setClaveAlumno(Long claveAlumno) {
-        this.claveAlumno = claveAlumno;
+    public void setClavesAlumno(List<Long> clavesAlumno) {
+        this.clavesAlumno = clavesAlumno;
     }
 
     public String getNombreGrupo() {

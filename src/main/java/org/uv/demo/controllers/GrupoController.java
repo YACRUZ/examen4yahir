@@ -5,12 +5,12 @@
 package org.uv.demo.controllers;
 
 import java.util.List;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.stream.Collectors;
 import org.uv.demo.dto.DTOGrupos;
 import org.uv.demo.repository.*;
 import org.uv.demo.models.*;
+
 
 /**
  *
@@ -21,15 +21,36 @@ import org.uv.demo.models.*;
 public class GrupoController {
 
     private final GrupoRepository grupoRepository;
+    private final MateriaRepository materiaRepository;
+    private final AlumnoRepository alumnoRepository;
 
-    @Autowired
-    private AlumnoRepository alumnoRepository;
-
-    @Autowired
-    private MateriaRepository materiaRepository;
-
-    public GrupoController(GrupoRepository grupoRepository) {
+    public GrupoController(GrupoRepository grupoRepository, MateriaRepository materiaRepository, AlumnoRepository alumnoRepository) {
         this.grupoRepository = grupoRepository;
+        this.materiaRepository = materiaRepository;
+        this.alumnoRepository = alumnoRepository;
+    }
+
+    @PostMapping
+    public Grupo crearGrupo(@RequestBody DTOGrupos grupoDTO) {
+        Grupo grupo = new Grupo();
+        grupo.setNombreGrupo(grupoDTO.getNombreGrupo());
+
+        // Obtener las materias y alumnos por sus claves
+        List<Materia> materias = grupoDTO.getClavesMateria().stream()
+                .map(claveMateria -> materiaRepository.findById(claveMateria)
+                        .orElseThrow(() -> new RuntimeException("Materia no encontrada con ID: " + claveMateria)))
+                .collect(Collectors.toList());
+
+        List<Alumno> alumnos = grupoDTO.getClavesAlumno().stream()
+                .map(claveAlumno -> alumnoRepository.findById(claveAlumno)
+                        .orElseThrow(() -> new RuntimeException("Alumno no encontrado con ID: " + claveAlumno)))
+                .collect(Collectors.toList());
+
+        // Asignar las materias y alumnos al grupo
+        grupo.setMaterias(materias);
+        grupo.setAlumnos(alumnos);
+
+        return grupoRepository.save(grupo);
     }
 
     @GetMapping
@@ -41,41 +62,6 @@ public class GrupoController {
     public Grupo obtenerGrupoPorId(@PathVariable Long id) {
         return grupoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Grupo no encontrado con ID: " + id));
-    }
-
-    @PostMapping
-    public Grupo crearGrupo(@RequestBody DTOGrupos grupoDTO) {
-        Grupo grupo = new Grupo();
-        BeanUtils.copyProperties(grupoDTO, grupo, "claveMateria", "claveAlumno"); // Excluir los campos claveMateria y claveAlumno de la copia
-
-        // Asignar manualmente los valores de claveMateria y claveAlumno
-        Materia materia = materiaRepository.findById(grupoDTO.getClaveMateria())
-                .orElseThrow(() -> new RuntimeException("Materia no encontrada con ID: " + grupoDTO.getClaveMateria()));
-        Alumno alumno = alumnoRepository.findById(grupoDTO.getClaveAlumno())
-                .orElseThrow(() -> new RuntimeException("Alumno no encontrado con ID: " + grupoDTO.getClaveAlumno()));
-
-        grupo.setMateria(materia);
-        grupo.setAlumno(alumno);
-        grupo.setNombreGrupo(grupoDTO.getNombreGrupo());
-
-        return grupoRepository.save(grupo);
-    }
-
-    @PutMapping("/{id}")
-    public Grupo actualizarGrupo(@PathVariable Long id, @RequestBody DTOGrupos grupoDTO) {
-        Grupo grupoExistente = grupoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Grupo no encontrado con ID: " + id));
-
-        Materia materia = materiaRepository.findById(grupoDTO.getClaveMateria())
-                .orElseThrow(() -> new RuntimeException("Materia no encontrada con ID: " + grupoDTO.getClaveMateria()));
-        Alumno alumno = alumnoRepository.findById(grupoDTO.getClaveAlumno())
-                .orElseThrow(() -> new RuntimeException("Alumno no encontrado con ID: " + grupoDTO.getClaveAlumno()));
-
-        grupoExistente.setMateria(materia);
-        grupoExistente.setAlumno(alumno);
-        grupoExistente.setNombreGrupo(grupoDTO.getNombreGrupo());
-
-        return grupoRepository.save(grupoExistente);
     }
 
     @DeleteMapping("/{id}")

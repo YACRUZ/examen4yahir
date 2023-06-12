@@ -5,6 +5,8 @@
 package org.uv.demo.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -17,13 +19,11 @@ public class Grupo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "clave_materia")
-    private Materia materia;
+    @OneToMany
+    private List<Materia> materias = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "clave_alumno")
-    private Alumno alumno;
+    @OneToMany
+    private List<Alumno> alumnos = new ArrayList<>();
 
     private String nombreGrupo;
 
@@ -35,20 +35,20 @@ public class Grupo {
         this.id = id;
     }
 
-    public Materia getMateria() {
-        return materia;
+    public List<Materia> getMaterias() {
+        return materias;
     }
 
-    public void setMateria(Materia materia) {
-        this.materia = materia;
+    public void setMaterias(List<Materia> materias) {
+        this.materias = materias;
     }
 
-    public Alumno getAlumno() {
-        return alumno;
+    public List<Alumno> getAlumnos() {
+        return alumnos;
     }
 
-    public void setAlumno(Alumno alumno) {
-        this.alumno = alumno;
+    public void setAlumnos(List<Alumno> alumnos) {
+        this.alumnos = alumnos;
     }
 
     public String getNombreGrupo() {
